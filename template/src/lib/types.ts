@@ -28,4 +28,14 @@ export interface VoiceEntry {
 export interface ProcessedResult {
   summary: string;
   tagFrequencies: Record<string, number>;
-} 
+  ideas?: Array<{
+    task_text: string;
+    status: string;
+    category: string;
+    due_date: string | null;
+    origin_type: string;
+    tone: string;
+    refinement_level: string;
+    belief_level: string;
+  }>;
+}
