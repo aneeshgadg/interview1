@@ -10,9 +10,17 @@
 //   pnpm add -D openai
 // The template keeps it optional so it still works without.
 
+// Define a type for the OpenAI client
+type OpenAIClient = {
+  embeddings: {
+    create: (params: { model: string; input: string }) => Promise<{ data: Array<{ embedding: number[] }> }>
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let OpenAI: any
 try {
-  // eslint-disable-next-line global-require, import/extensions, import/no-extraneous-dependencies
+  // eslint-disable-next-line global-require, import/extensions, import/no-extraneous-dependencies, import/no-unresolved
   OpenAI = (await import('openai')).default
 } catch {
   // no dependency installed – we will use stubs
@@ -20,7 +28,7 @@ try {
 
 const apiKey = process.env.OPENAI_API_KEY || ''
 
-export function hasRealOpenAIKey() {
+export function hasRealOpenAIKey(): boolean {
   return Boolean(apiKey && OpenAI)
 }
 
@@ -31,12 +39,12 @@ export function hasRealOpenAIKey() {
  */
 export async function embed(text: string): Promise<number[]> {
   if (hasRealOpenAIKey()) {
-    const client = new OpenAI({ apiKey })
+    const client = new OpenAI({ apiKey }) as OpenAIClient
     const res = await client.embeddings.create({
       model: 'text-embedding-3-small',
       input: text,
     })
-    // @ts-ignore – typings vary by version
+    
     return res.data[0].embedding as number[]
   }
   // Fallback: convert chars to small numeric vector (deterministic)

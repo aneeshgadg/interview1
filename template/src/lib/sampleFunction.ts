@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import { VoiceEntry, ProcessedResult } from './types.js'
 
 /**
