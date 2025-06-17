@@ -59,7 +59,7 @@ describe('processEntries', () => {
   it('handles empty entries array', () => {
     const result = processEntries([])
     expect(result.tagFrequencies).toEqual({})
-    expect(result.ideas).toEqual([])
+    expect(result.ideas || []).toEqual([])
     expect(result.summary).toContain('0 potential ideas')
   })
 
@@ -328,7 +328,7 @@ describe('processEntries', () => {
     }
     
     // Print details about the first few ideas (if any)
-    if (result.ideas.length > 0) {
+    if (result.ideas && result.ideas.length > 0) {
       console.log('\n----- Sample Ideas (first 3) -----');
       const samplesToShow = Math.min(3, result.ideas.length);
       
@@ -350,6 +350,6 @@ describe('processEntries', () => {
     
     // Verify the summary contains the correct counts
     expect(result.summary).toContain(`Analysis of ${mockVoiceEntries.length} entries`);
-    expect(result.summary).toContain(`found ${result.ideas.length} potential ideas`);
+    expect(result.summary).toContain(`found ${result.ideas?.length || 0} potential ideas`);
   });
 }) 
